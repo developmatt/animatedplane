@@ -1,7 +1,23 @@
+let airStripMarkAnimationDuration = 600;
+let hadFlew = false;
+
+let animatedPlaneContainer;
+
+let plane;
+let planeShadow;
+let planeShadowContainer;
+
+const planeImageHeightOnFlight = 100;
+const planeImageHeightOnGround = 80;
+
+const planeShadowImageHeightOnFlight = 60;
+
+const planeContainerInitialWidth = 300;
+
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
-        .container {
+        .animated-plane-container {
             background: #57A0F2;
             width: 100%;
             height: 100%;
@@ -11,8 +27,12 @@ template.innerHTML = `
             
         }
 
+        .animated-plane-container * {
+            box-sizing: border-box;
+        }
+
         .plane-container {
-            width: 300px;
+            width: ${planeContainerInitialWidth}px;
             height: calc(100% - 30px);
             margin: 30px auto 0 auto;
             display: flex;
@@ -24,12 +44,8 @@ template.innerHTML = `
             z-index: 2;
         }
 
-        .plane-container {
-            width: 350px;
-        }
-
         .plane {
-            height: 80%;
+            height: ${planeImageHeightOnGround}%;
             display: block;
             transition: all 1s ease;
             margin-bottom: 20px;
@@ -39,6 +55,7 @@ template.innerHTML = `
         .plane-shadow-container {
             z-index: 1;
             padding: 10px 0 0 20px;
+            margin-left: 200px;
         }
 
         .plane-shadow {
@@ -96,13 +113,13 @@ template.innerHTML = `
 
     </style>
     
-    <div class="container">
+    <div class="animated-plane-container">
         <div class="plane-container">
             <img src="./animatedplane/plane.png" id="plane" class="plane" />
         </div>
         
         <div class="plane-container plane-shadow-container">
-            <img src="./animatedplane/plane_shadow.png" id="planeshadow" class="plane plane-shadow" />
+            <img src="./animatedplane/plane_shadow.png" id="plane-shadow" class="plane plane-shadow" />
         </div>
 
         <div class="airstrip" id="airstrip"></div>
@@ -114,16 +131,15 @@ window.animatedPlane = function(el) {
 
     el.innerHTML = template.innerHTML;
 
+    animatedPlaneContainer = document.querySelector('.animated-plane-container');
+    plane = document.querySelector('#plane');
+    planeShadow = document.querySelector('#plane-shadow');
+    planeShadowContainer = document.querySelector('.plane-shadow-container');
+
     renderStripMark();
     planeVibrationLoop();
     renderSpots();
 }
-
-let airStripMarkAnimationDuration = 600;
-let hadFlew = false;
-
-const planeImageHeightOnFlight = 100;
-const planeImageHeightOnGround = 80;
 
 //Starts the airstrip spots rendering
 function renderSpots() {
@@ -182,7 +198,7 @@ function vibrate() {
         {marginLeft: '0'}
     ], 2500);
 
-    planeshadow.animate([
+    planeShadow.animate([
         {marginBottom: '20px'},
         {marginBottom: '30px'},
         {marginLeft: marginLeftPlane},
@@ -195,6 +211,7 @@ function vibrate() {
 function fly() {
     if(plane.style.height == planeImageHeightOnFlight + '%') return false;
     hadFlew = true;
+
     plane.animate([
         { height: planeImageHeightOnGround + '%' },
         { height: '95%' },
@@ -203,7 +220,30 @@ function fly() {
     ], {
         duration: 1000
     });
-    setTimeout(() => plane.style.height = planeImageHeightOnFlight + '%');
+
+    planeShadow.animate([
+        { height: planeImageHeightOnGround + '%' },
+        { height: '65%' },
+        { height: '62%' },
+        { height: planeShadowImageHeightOnFlight + '%' },
+    ], {
+        duration: 1000
+    });
+
+    planeShadowContainer.animate([
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2)) + 'px'},
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2) + 100) + 'px'},
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2) + 120) + 'px'},
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2) + 125) + 'px'},
+    ], {
+        duration: 1000
+    });
+
+    setTimeout(function() {
+        plane.style.height = planeImageHeightOnFlight + '%';
+        planeShadow.style.height = planeShadowImageHeightOnFlight + '%';
+        planeShadowContainer.style.marginLeft = (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2) + 125) + 'px';
+    });
 }
 
 //Execute the land animation
@@ -216,9 +256,31 @@ function land() {
         { height: planeImageHeightOnGround + '%' }
     ], {
         duration: 1000
-    })
+    });
+
+    planeShadow.animate([
+        { height: planeShadowImageHeightOnFlight + '%' },
+        { height: '75%' },
+        { height: '78%' },
+        { height: planeImageHeightOnGround + '%' },
+    ], {
+        duration: 1000
+    });
+
+    planeShadowContainer.animate([
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2) + 125) + 'px'},
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2) + 25) + 'px'},
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2) + 5) + 'px'},
+        { marginLeft: (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2)) + 'px'},
+    ], {
+        duration: 1000
+    });
+
+
     setTimeout(function() {
         plane.style.height = planeImageHeightOnGround + '%';
+        planeShadow.style.height = planeImageHeightOnGround + '%';
+        planeShadowContainer.style.marginLeft = (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2)) + 'px';
     })
 }
 
