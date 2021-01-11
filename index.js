@@ -4,7 +4,8 @@ template.innerHTML = `
         .container {
             background: #308afc;
             width: 100%;
-            height: 300px;
+            height: 100%;
+            min-height: 200px;
             position: relative;
             
         }
@@ -42,7 +43,9 @@ template.innerHTML = `
             height: 100%;
             margin: 0 auto;
             background-color: rgb(7, 11, 22);
-            position: relative;
+            position: absolute;
+            left: 25%;
+            top: 0;
         }
 
         .marks {
@@ -99,6 +102,7 @@ window.animatedPlane = function(el) {
     if(!el) return false;
 
     el.innerHTML = template.innerHTML;
+    const plane = document.querySelector('.plane');
 
     renderStripMark();
     planeVibrationLoop();
@@ -110,7 +114,6 @@ let hadFlew = false;
 
 const planeImageHeightOnFlight = 100;
 const planeImageHeightOnGround = 80;
-const plane = document.querySelector('.plane');
 
 //Starts the airstrip spots rendering
 function renderSpots() {
