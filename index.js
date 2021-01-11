@@ -7,6 +7,7 @@ template.innerHTML = `
             height: 100%;
             min-height: 200px;
             position: relative;
+            overflow: hidden;
             
         }
 
@@ -20,6 +21,7 @@ template.innerHTML = `
             position: absolute;
             left: 0;
             right: 0;
+            z-index: 2;
         }
 
         .plane-container {
@@ -34,8 +36,13 @@ template.innerHTML = `
             z-index: 1;
         }
 
-        .plane.fly {
-            height: 100%;
+        .plane-shadow-container {
+            z-index: 1;
+            padding: 10px 0 0 20px;
+        }
+
+        .plane-shadow {
+            opacity: 0.3;
         }
 
         #airstrip {
@@ -91,7 +98,11 @@ template.innerHTML = `
     
     <div class="container">
         <div class="plane-container">
-            <img src="./animatedplane/plane.png" alt="" class="plane" id="plane" />
+            <img src="./animatedplane/plane.png" id="plane" class="plane" />
+        </div>
+        
+        <div class="plane-container plane-shadow-container">
+            <img src="./animatedplane/plane_shadow.png" id="planeshadow" class="plane plane-shadow" />
         </div>
 
         <div class="airstrip" id="airstrip"></div>
@@ -102,7 +113,6 @@ window.animatedPlane = function(el) {
     if(!el) return false;
 
     el.innerHTML = template.innerHTML;
-    const plane = document.querySelector('.plane');
 
     renderStripMark();
     planeVibrationLoop();
@@ -163,9 +173,16 @@ function vibrate() {
         marginLeftPlane = '-5px';
     } else if(random > 0.3) {
         marginLeftPlane = '5px';
-    }
-    const plane = document.querySelector('.plane');    
+    }   
     plane.animate([
+        {marginBottom: '20px'},
+        {marginBottom: '30px'},
+        {marginLeft: marginLeftPlane},
+        {marginBottom: '20px'},
+        {marginLeft: '0'}
+    ], 2500);
+
+    planeshadow.animate([
         {marginBottom: '20px'},
         {marginBottom: '30px'},
         {marginLeft: marginLeftPlane},
