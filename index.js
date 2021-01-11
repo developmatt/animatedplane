@@ -1,9 +1,11 @@
 let airStripMarkAnimationDuration = 600;
 let hadFlew = false;
+let flying = false;
 
 let animatedPlaneContainer;
 
 let plane;
+let planeContainer;
 let planeShadow;
 let planeShadowContainer;
 
@@ -133,6 +135,7 @@ window.animatedPlane = function(el) {
 
     animatedPlaneContainer = document.querySelector('.animated-plane-container');
     plane = document.querySelector('#plane');
+    planeContainer = plane.parentElement;
     planeShadow = document.querySelector('#plane-shadow');
     planeShadowContainer = document.querySelector('.plane-shadow-container');
 
@@ -211,6 +214,7 @@ function vibrate() {
 function fly() {
     if(plane.style.height == planeImageHeightOnFlight + '%') return false;
     hadFlew = true;
+    flying = true;
 
     plane.animate([
         { height: planeImageHeightOnGround + '%' },
@@ -249,6 +253,7 @@ function fly() {
 //Execute the land animation
 function land() {
     if(plane.style.height == planeImageHeightOnGround + '%' || !hadFlew) return false;
+    flying = false;
     plane.animate([
         { height: planeImageHeightOnFlight + '%' },
         { height: '85%' },
@@ -282,6 +287,28 @@ function land() {
         planeShadow.style.height = planeImageHeightOnGround + '%';
         planeShadowContainer.style.marginLeft = (((animatedPlaneContainer.offsetWidth - planeContainerInitialWidth) / 2)) + 'px';
     })
+}
+
+//Execute the taking off animation
+function takeOff() {
+    if(!flying) return false;
+    planeContainer.animate([
+        { bottom: '0px' },
+        { bottom: '500px' },
+        { bottom: '800px' },
+        { bottom: '900px' }
+    ], {
+        duration: 10000
+    });
+
+    planeShadowContainer.animate([
+        { bottom: '0px' },
+        { bottom: '500px' },
+        { bottom: '800px' },
+        { bottom: '900px' }
+    ], {
+        duration: 10000
+    });
 }
 
 //Create an element animation and, then, remove it
