@@ -2,7 +2,7 @@ const template = document.createElement('template');
 template.innerHTML = `
 <style>
         .container {
-            background: #308afc;
+            background: #57A0F2;
             width: 100%;
             height: 100%;
             min-height: 200px;
@@ -49,7 +49,7 @@ template.innerHTML = `
             width: 50%;
             height: 100%;
             margin: 0 auto;
-            background-color: rgb(7, 11, 22);
+            background-color: #0A52A6;
             position: absolute;
             left: 25%;
             top: 0;
@@ -77,7 +77,7 @@ template.innerHTML = `
         .marks__mark {
             width: calc((100% / 3) - 3px);
             height: 100%;
-            background-color: white;
+            background-color: #57A0F2;
         }
 
         .spot {
