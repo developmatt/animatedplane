@@ -9,6 +9,9 @@ let planeContainer;
 let planeShadow;
 let planeShadowContainer;
 
+let renderSpotsInterval;
+let renderAirstripInterval;
+
 const planeImageHeightOnFlight = 100;
 const planeImageHeightOnGround = 80;
 
@@ -140,14 +143,14 @@ window.animatedPlane = function(el, rootContext) {
     planeShadow = document.querySelector('#plane-shadow');
     planeShadowContainer = document.querySelector('.plane-shadow-container');
 
+    renderSpots();
     renderStripMark();
     planeVibrationLoop();
-    renderSpots();
 }
 
 //Starts the airstrip spots rendering
 function renderSpots() {
-    setInterval(() => runSpot(false), 100);
+    renderSpotsInterval = setInterval(() => runSpot(false), airStripMarkAnimationDuration * 0.7);
 }
 
 //Animate spot
@@ -163,7 +166,7 @@ function runSpot(left = false) {
 
 //Start the airstrip mark loop
 function renderStripMark() {
-    setInterval(()  => runAirStripMark(), 2500)
+    renderAirstripInterval = setInterval(()  => runAirStripMark(), airStripMarkAnimationDuration * 3.5)
 }
 
 //Animates the airstrip mark
@@ -328,11 +331,18 @@ function animateDown(el, infinity = false) {
 function accelerate(speed) {
     if(airStripMarkAnimationDuration <= 100) return;
     airStripMarkAnimationDuration = speed ? speed : airStripMarkAnimationDuration - 100;
-    console.log(airStripMarkAnimationDuration);
+    clearInterval(renderSpotsInterval);
+    clearInterval(renderAirstripInterval);
+    renderSpots();
+    renderStripMark();
 }
 
 //Decelerate airstrip components transition
 function decelerate(speed) {
     if(airStripMarkAnimationDuration >= 1000) return;
     airStripMarkAnimationDuration = speed ? speed : airStripMarkAnimationDuration + 100;
+    clearInterval(renderSpotsInterval);
+    clearInterval(renderAirstripInterval);
+    renderSpots();
+    renderStripMark();
 }
