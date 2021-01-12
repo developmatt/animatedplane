@@ -1,4 +1,4 @@
-let airStripMarkAnimationDuration = 600;
+let airStripMarkAnimationDuration = 1000;
 let hadFlew = false;
 let flying = false;
 
@@ -23,10 +23,9 @@ template.innerHTML = `
             background: #57A0F2;
             width: 100%;
             height: 100%;
-            min-height: 200px;
+            min-height: 100px;
             position: relative;
             overflow: hidden;
-            
         }
 
         .animated-plane-container * {
@@ -57,7 +56,6 @@ template.innerHTML = `
         .plane-shadow-container {
             z-index: 1;
             padding: 10px 0 0 20px;
-            margin-left: 200px;
         }
 
         .plane-shadow {
@@ -100,8 +98,8 @@ template.innerHTML = `
         }
 
         .spot {
-            width: 7px;
-            height: 7px;
+            width: 5px;
+            height: 5px;
             background-color: white;
             border-radius: 50%;
             position: absolute;
@@ -117,19 +115,22 @@ template.innerHTML = `
     
     <div class="animated-plane-container">
         <div class="plane-container">
-            <img src="./animatedplane/plane.png" id="plane" class="plane" />
+            <img src="{{rootContext}}/plane.png" id="plane" class="plane" />
         </div>
         
         <div class="plane-container plane-shadow-container">
-            <img src="./animatedplane/plane_shadow.png" id="plane-shadow" class="plane plane-shadow" />
+            <img src="{{rootContext}}/plane_shadow.png" id="plane-shadow" class="plane plane-shadow" />
         </div>
 
         <div class="airstrip" id="airstrip"></div>
     </div>
 `;
 
-window.animatedPlane = function(el) {
+window.animatedPlane = function(el, rootContext) {
     if(!el) return false;
+    if(!rootContext) rootContext = './animatedplane';
+
+    template.innerHTML = template.innerHTML.replaceAll('{{rootContext}}', rootContext);
 
     el.innerHTML = template.innerHTML;
 
@@ -324,13 +325,14 @@ function animateDown(el, infinity = false) {
 }
 
 //Accelerate airstrip components transition
-function accelerate() {
+function accelerate(speed) {
     if(airStripMarkAnimationDuration <= 100) return;
-    airStripMarkAnimationDuration -= 100;
+    airStripMarkAnimationDuration = speed ? speed : airStripMarkAnimationDuration - 100;
+    console.log(airStripMarkAnimationDuration);
 }
 
 //Decelerate airstrip components transition
-function decelerate() {
+function decelerate(speed) {
     if(airStripMarkAnimationDuration >= 1000) return;
-    airStripMarkAnimationDuration += 100;
+    airStripMarkAnimationDuration = speed ? speed : airStripMarkAnimationDuration + 100;
 }
